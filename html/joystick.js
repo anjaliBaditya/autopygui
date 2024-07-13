@@ -93,3 +93,79 @@ JoyStick.prototype.__is_right = function( dx, dy )
 	return true;	
 };
 
+
+JoyStick.prototype.__create_fullscreen_div = function()
+{
+	if ( JOYSTICK_DIV === null )
+	{
+		__init_joystick_div();
+	}
+	this.div = JOYSTICK_DIV;
+	///////////////////////////////////////////
+	this.base = document.createElement('span');
+	div_style = this.base.style;
+	div_style.width = this.radius * 2 + 'px';
+	div_style.height = this.radius * 2 + 'px';
+	div_style.position = 'absolute';
+	div_style.top = this.y - this.radius + 'px';
+	div_style.left = this.x - this.radius + 'px';
+	div_style.borderRadius = '50%';
+	div_style.borderColor = 'rgba(200,200,200,0.5)';
+	div_style.borderWidth = '1px';
+	div_style.borderStyle = 'solid';
+	this.div.appendChild( this.base );
+	///////////////////////////////////////////
+	this.control = document.createElement('span');
+	div_style = this.control.style;
+	div_style.width = this.inner_radius * 2 + 'px';
+	div_style.height = this.inner_radius * 2 + 'px';
+	div_style.position = 'absolute';
+	div_style.top = this.y - this.inner_radius + 'px';
+	div_style.left = this.x - this.inner_radius + 'px';
+	div_style.borderRadius = '50%';
+	div_style.backgroundColor = 'rgba(200,200,200,0.3)';
+	div_style.borderWidth = '1px';
+	div_style.borderColor = 'rgba(200,200,200,0.8)';
+	div_style.borderStyle = 'solid';
+	this.div.appendChild( this.control );
+	///////////////////////////////////////////
+	var self = this;
+	// the event is binded in all the screen
+	// to captures fast movements
+	function touch_hander( evt )
+	{
+		var touch_obj = evt.changedTouches ? evt.changedTouches[0] : evt;
+		if ( self.mouse_support && !(touch_obj.buttons === 1) )
+		{
+			return;
+		}
+		self.control.style.left = touch_obj.clientX - self.inner_radius + 'px';
+		self.control.style.top = touch_obj.clientY - self.inner_radius + 'px';
+
+		var dx = touch_obj.clientX - self.x;
+		var dy = touch_obj.clientY - self.y;
+		self.up = self.__is_up( dx, dy );
+		self.down = self.__is_down( dx, dy );
+		self.left = self.__is_left( dx, dy );
+		self.right = self.__is_right( dx, dy );
+	}
+	function clear_flags()
+	{
+		self.left = false;
+		self.right = false;
+		self.up = false;
+		self.down = false;
+
+		self.control.style.top = self.y - self.inner_radius + 'px';
+		self.control.style.left = self.x - self.inner_radius + 'px';
+	}
+	this.bind( 'touchmove', touch_hander );
+	this.bind( 'touchstart', touch_hander );
+	this.bind( 'touchend', clear_flags );
+	if ( this.mouse_support )
+	{
+		this.bind( 'mousedown', touch_hander );
+		this.bind( 'mousemove', touch_hander );
+		this.bind( 'mouseup', clear_flags );
+	}
+};
