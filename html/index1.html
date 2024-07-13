@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> 
+</head>
+<body bgcolor="black">
+    <h1 style="color: white;">WebSocket Test</h1>
+
+    <div style="display: grid; ">
+        <button style="background-color: red; height: 60px; width: 100px; grid-column: 2/3; grid-row: 1/2;" ontouchstart="sendMessage(event, 'speed_90_21')" ontouchend="sendMessage(event, 'speed_90_-1')"></button>
+        <button style="background-color: red; height: 60px; width: 100px; grid-column: 1/2; grid-row: 2/3;" ontouchstart="sendMessage(event, 'direction_180_21')" ontouchend="sendMessage(event, 'direction_180_-1')"></button>
+        <button style="background-color: red; height: 60px; width: 100px; grid-column: 2/3; grid-row: 2/3;" ontouchstart="sendMessage(event, 'speed_270_21')" ontouchend="sendMessage(event, 'speed_270_-1')"></button>
+        <button style="background-color: red; height: 60px; width: 100px; grid-column: 3/4; grid-row: 2/3;" ontouchstart="sendMessage(event, 'direction_0_21')" ontouchend="sendMessage(event, 'direction_0_-1')"></button>
+    </div>
+
+
+    <script>
+    
+        var ws = new WebSocket("ws://127.0.0.1:8000/index1.html/ws");
+        function sendMessage(event, button) {
+            console.log(button)
+            ws.send(button)
+            event.preventDefault()
+        }
+    </script>
+</body>
+</html>
