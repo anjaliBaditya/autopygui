@@ -67,6 +67,19 @@ JoyStick.prototype.__is_down = function down( dx, dy )
 	return true;	
 };
 
+JoyStick.prototype.__is_left = function( dx, dy )
+{
+	if( dx >= 0 )
+	{
+		return false;
+	}
+	if( Math.abs(dy) > 2*Math.abs(dx) )
+	{
+		return false;
+	}
+	return true;	
+};
+
 JoyStick.prototype.__is_right = function( dx, dy )
 {
 	if( dx <= 0 )
@@ -80,7 +93,6 @@ JoyStick.prototype.__is_right = function( dx, dy )
 	return true;	
 };
 
-
 JoyStick.prototype.__create_fullscreen_div = function()
 {
 	if ( JOYSTICK_DIV === null )
@@ -90,6 +102,17 @@ JoyStick.prototype.__create_fullscreen_div = function()
 	this.div = JOYSTICK_DIV;
 	///////////////////////////////////////////
 	this.base = document.createElement('span');
+	div_style = this.base.style;
+	div_style.width = this.radius * 2 + 'px';
+	div_style.height = this.radius * 2 + 'px';
+	div_style.position = 'absolute';
+	div_style.top = this.y - this.radius + 'px';
+	div_style.left = this.x - this.radius + 'px';
+	div_style.borderRadius = '50%';
+	div_style.borderColor = 'rgba(200,200,200,0.5)';
+	div_style.borderWidth = '1px';
+	div_style.borderStyle = 'solid';
+	this.div.appendChild( this.base );
 	///////////////////////////////////////////
 	this.control = document.createElement('span');
 	div_style = this.control.style;
